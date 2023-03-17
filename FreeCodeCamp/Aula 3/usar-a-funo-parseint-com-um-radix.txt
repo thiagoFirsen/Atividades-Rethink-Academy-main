@@ -1,0 +1,8 @@
+function convertToInteger(str) {
+
+const inteiro = parseInt(str,2)
+return inteiro
+
+}
+
+convertToInteger("10011");

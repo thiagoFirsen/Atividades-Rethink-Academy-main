@@ -1,0 +1,6 @@
+function convertToInteger(str) {
+  const inteiro = parseInt(str)
+  return inteiro
+}
+
+convertToInteger("56");

@@ -1,0 +1,9 @@
+function randomFraction() {
+
+  // Altere apenas o código abaixo desta linha
+
+  const random = Math.random()
+  return random;
+
+  // Altere apenas o código acima desta linha
+}
