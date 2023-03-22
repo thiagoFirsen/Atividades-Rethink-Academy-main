@@ -23,7 +23,7 @@ function calculateWageJS(
   };
 }
 
-console.log(calculateWageJS("Amanda", 2, 160, 20));
+// console.log(calculateWageJS("Amanda", 2, 160, 20));
 
 module.exports = {
   calculateWageJS,

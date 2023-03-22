@@ -1,7 +1,4 @@
 const fn = require("./functions");
-
-// console.log(fn.calculateWageJS("Amanda", 160, 20, 10));
-
 describe("calculateWageJS", () => {
   it("should return a specific object", () => {
     expect(fn.calculateWageJS("Amanda", 160, 20, 10)).toMatchObject({
