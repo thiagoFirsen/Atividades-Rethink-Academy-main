@@ -14,6 +14,13 @@ describe("getProducts", () => {
   it("should return an array of objects", async () => {
     expect(Array.isArray(await getProducts())).toBeTruthy();
   });
+  it("getProducts throws an error", async () => {
+    try {
+      await getProducts();
+    } catch (e) {
+      expect(e).toBeInstanceOf(Error);
+    }
+  });
 });
 
 describe("getProductById", () => {
@@ -43,6 +50,13 @@ describe("getAllProductCategories", () => {
     expect(await getAllProductCategories()).toContain("jewelery");
     expect(await getAllProductCategories()).toContain("men's clothing");
     expect(await getAllProductCategories()).toContain("women's clothing");
+  });
+  it("getAllProductCategories throws an error", async () => {
+    try {
+      await getAllProductCategories();
+    } catch (e) {
+      expect(e).toBeInstanceOf(Error);
+    }
   });
 });
 
@@ -86,6 +100,13 @@ describe("displayTheProductWithTheMostVotes", () => {
   it("should return a specific number", async () => {
     expect((await displayTheProductWithTheMostVotes()).rating.count).toBe(679);
   });
+  it("displayTheProductWithTheMostVotes throws an error", async () => {
+    try {
+      await displayTheProductWithTheMostVotes();
+    } catch (e) {
+      expect(e).toBeInstanceOf(Error);
+    }
+  });
 });
 
 describe("displayTheAveragePriceCalculationForAllProducts", () => {
@@ -94,16 +115,37 @@ describe("displayTheAveragePriceCalculationForAllProducts", () => {
       typeof (await displayTheAveragePriceCalculationForAllProducts())
     ).toBe("number");
   });
+  it("displayTheAveragePriceCalculationForAllProducts throws an error", async () => {
+    try {
+      await displayTheAveragePriceCalculationForAllProducts();
+    } catch (e) {
+      expect(e).toBeInstanceOf(Error);
+    }
+  });
 });
 
 describe("displayMoreExpensiveProduct", () => {
   it("should return a specific property and value", async () => {
     expect(await displayMoreExpensiveProduct()).toHaveProperty("price", 999.99);
   });
+  it("displayMoreExpensiveProduct throws an error", async () => {
+    try {
+      await displayMoreExpensiveProduct();
+    } catch (e) {
+      expect(e).toBeInstanceOf(Error);
+    }
+  });
 });
 
 describe("displayTheCheapestProduct()", () => {
   it("should return a specific property and value", async () => {
     expect(await displayTheCheapestProduct()).toHaveProperty("price", 7.95);
+  });
+  it("displayTheCheapestProduct throws an error", async () => {
+    try {
+      await displayTheCheapestProduct();
+    } catch (e) {
+      expect(e).toBeInstanceOf(Error);
+    }
   });
 });

@@ -13,4 +13,4 @@ import {
 const displayConsole = async (fn) => {
   console.log(await fn);
 };
-displayConsole(getProductById(1));
+displayConsole(displayTheCheapestProduct());

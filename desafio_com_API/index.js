@@ -1,9 +1,13 @@
 //exibir todos os produtos da base de dados;
 const getProducts = async () => {
-  const url = "https://fakestoreapi.com/products";
-  const result = await fetch(url);
-  const resultJson = await result.json();
-  return resultJson;
+  try {
+    const url = "https://fakestoreapi.com/products";
+    const result = await fetch(url);
+    const resultJson = await result.json();
+    return resultJson;
+  } catch (e) {
+    return e;
+  }
 };
 
 // exibir os dados de um produto a partir do id de um produto fornecido;
@@ -20,10 +24,14 @@ const getProductById = async (id) => {
 //exibir todos as categorias de produtos;
 
 const getAllProductCategories = async () => {
-  const url = "https://fakestoreapi.com/products/categories";
-  const result = await fetch(url);
-  const resultJson = await result.json();
-  return resultJson;
+  try {
+    const url = "https://fakestoreapi.com/products/categories";
+    const result = await fetch(url);
+    const resultJson = await result.json();
+    return resultJson;
+  } catch (e) {
+    return e;
+  }
 };
 
 // exibir todos os produtos de uma dada categoria;
@@ -69,42 +77,54 @@ const displayTheProductWithTheMostVotes = async () => {
 //exibir o cálculo da média de preços de todos os produtos;
 
 const displayTheAveragePriceCalculationForAllProducts = async () => {
-  const url = "https://fakestoreapi.com/products";
-  const result = await fetch(url);
-  const resultJson = await result.json();
-  const SumOfAllProducts = await resultJson.reduce((acc, cur) => {
-    acc += cur.price;
-    return acc;
-  }, 0);
+  try {
+    const url = "https://fakestoreapi.com/products";
+    const result = await fetch(url);
+    const resultJson = await result.json();
+    const SumOfAllProducts = await resultJson.reduce((acc, cur) => {
+      acc += cur.price;
+      return acc;
+    }, 0);
 
-  const averageOfTheSumOfAllProducts =
-    (await SumOfAllProducts) / resultJson.length;
+    const averageOfTheSumOfAllProducts =
+      (await SumOfAllProducts) / resultJson.length;
 
-  return averageOfTheSumOfAllProducts;
+    return averageOfTheSumOfAllProducts;
+  } catch (e) {
+    return e;
+  }
 };
 
 //exibir o produto mais caro
 
 const displayMoreExpensiveProduct = async () => {
-  const url = "https://fakestoreapi.com/products";
-  const result = await fetch(url);
-  const resultJson = await result.json();
-  const highestProduct = await resultJson.reduce((acc, cur) => {
-    return cur.price > acc.price ? cur : acc;
-  });
-  return highestProduct;
+  try {
+    const url = "https://fakestoreapi.com/products";
+    const result = await fetch(url);
+    const resultJson = await result.json();
+    const highestProduct = await resultJson.reduce((acc, cur) => {
+      return cur.price > acc.price ? cur : acc;
+    });
+    return highestProduct;
+  } catch (e) {
+    return e;
+  }
 };
 
 //exibir o produto mais barato.
 
 const displayTheCheapestProduct = async () => {
-  const url = "https://fakestoreapi.com/products";
-  const result = await fetch(url);
-  const resultJson = await result.json();
-  const cheaperProduct = await resultJson.reduce((acc, cur) => {
-    return cur.price < acc.price ? cur : acc;
-  });
-  return cheaperProduct;
+  try {
+    const url = "https://fakestoreapi.com/products";
+    const result = await fetch(url);
+    const resultJson = await result.json();
+    const cheaperProduct = await resultJson.reduce((acc, cur) => {
+      return cur.price < acc.price ? cur : acc;
+    });
+    return cheaperProduct;
+  } catch (e) {
+    return e;
+  }
 };
 
 export {
