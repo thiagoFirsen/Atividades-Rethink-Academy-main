@@ -1,84 +1,88 @@
 //exibir todos os produtos da base de dados;
-const getProducts = async () => {
+
+const getProducts = async (url) => {
   try {
-    const url = "https://fakestoreapi.com/products";
     const result = await fetch(url);
     const resultJson = await result.json();
     return resultJson;
   } catch (e) {
-    return e;
+    throw e;
   }
 };
 
 // exibir os dados de um produto a partir do id de um produto fornecido;
-const getProductById = async (id) => {
+const getProductById = async (url, id) => {
   if (!id) throw new Error("id is required.");
-  else {
-    const url = `https://fakestoreapi.com/products/${id}`;
-    const result = await fetch(url);
+  try {
+    const result = await fetch(url + id);
     const resultJson = await result.json();
     return resultJson;
+  } catch (e) {
+    throw e;
   }
 };
 
 //exibir todos as categorias de produtos;
 
-const getAllProductCategories = async () => {
+const getAllProductCategories = async (url, endPoint) => {
   try {
-    const url = "https://fakestoreapi.com/products/categories";
-    const result = await fetch(url);
+    const result = await fetch(url + "/categories");
     const resultJson = await result.json();
     return resultJson;
   } catch (e) {
-    return e;
+    throw e;
   }
 };
 
 // exibir todos os produtos de uma dada categoria;
 
-const getProductByCategory = async (category) => {
+const getProductByCategory = async (url, category) => {
   if (!category) throw new Error("category is required.");
-  else {
-    const url = `https://fakestoreapi.com/products/category/${category}`;
-    const result = await fetch(url);
+  try {
+    const result = await fetch(url + "/category/" + category);
     const resultJson = await result.json();
     return resultJson;
+  } catch (e) {
+    throw e;
   }
 };
 
 //exibir todos os produtos com rate acima de 4;
 
-const getProductByRate = async (minimumRate) => {
+const getProductByRate = async (url, minimumRate) => {
   if (!minimumRate) throw new Error("minimium rate is required.");
-  else {
-    const url = "https://fakestoreapi.com/products";
+  try {
     const result = await fetch(url);
     const resultJson = await result.json();
     const rateGreaterThanThePassedParameter = await resultJson.filter(
       (element) => element.rating.rate > minimumRate
     );
     return rateGreaterThanThePassedParameter;
+  } catch (e) {
+    throw e;
   }
 };
 
 //exibir o produto com mais votos;
 
-const displayTheProductWithTheMostVotes = async () => {
-  const url = "https://fakestoreapi.com/products";
-  const result = await fetch(url);
-  const resultJson = await result.json();
-  const productWithTheMostVotes = await resultJson.reduce((acc, cur) => {
-    acc = cur.rating.count > acc.rating.count ? cur : acc;
-    return acc;
-  });
-  return productWithTheMostVotes;
+const displayTheProductWithTheMostVotes = async (url) => {
+  try {
+    const result = await fetch(url);
+    const resultJson = await result.json();
+    const productWithTheMostVotes = await resultJson.reduce((acc, cur) => {
+      acc = cur.rating.count > acc.rating.count ? cur : acc;
+      return acc;
+    });
+    return productWithTheMostVotes;
+  } catch (e) {
+    throw e;
+  }
 };
 
 //exibir o cálculo da média de preços de todos os produtos;
 
-const displayTheAveragePriceCalculationForAllProducts = async () => {
+const displayTheAveragePriceCalculationForAllProducts = async (url) => {
   try {
-    const url = "https://fakestoreapi.com/products";
     const result = await fetch(url);
     const resultJson = await result.json();
     const SumOfAllProducts = await resultJson.reduce((acc, cur) => {
@@ -91,15 +95,14 @@ const displayTheAveragePriceCalculationForAllProducts = async () => {
 
     return averageOfTheSumOfAllProducts;
   } catch (e) {
-    return e;
+    throw e;
   }
 };
 
 //exibir o produto mais caro
 
-const displayMoreExpensiveProduct = async () => {
+const displayMoreExpensiveProduct = async (url) => {
   try {
-    const url = "https://fakestoreapi.com/products";
     const result = await fetch(url);
     const resultJson = await result.json();
     const highestProduct = await resultJson.reduce((acc, cur) => {
@@ -107,15 +110,14 @@ const displayMoreExpensiveProduct = async () => {
     });
     return highestProduct;
   } catch (e) {
-    return e;
+    throw e;
   }
 };
 
 //exibir o produto mais barato.
 
-const displayTheCheapestProduct = async () => {
+const displayTheCheapestProduct = async (url) => {
   try {
-    const url = "https://fakestoreapi.com/products";
     const result = await fetch(url);
     const resultJson = await result.json();
     const cheaperProduct = await resultJson.reduce((acc, cur) => {
@@ -123,7 +125,7 @@ const displayTheCheapestProduct = async () => {
     });
     return cheaperProduct;
   } catch (e) {
-    return e;
+    throw e;
   }
 };
 
