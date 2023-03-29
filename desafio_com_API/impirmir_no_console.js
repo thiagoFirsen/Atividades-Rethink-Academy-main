@@ -9,9 +9,9 @@ import {
   displayMoreExpensiveProduct,
   displayTheCheapestProduct,
 } from "./index.js";
-const url = "https://fakestoreapi.com/products/";
+const url = "https://fakestoreapi.com/productss/";
 
 const displayConsole = async (fn) => {
   console.log(await fn);
 };
-displayConsole(displayTheCheapestProduct(url));
+displayConsole(getProducts(url));
