@@ -1,5 +1,7 @@
 import express from "express";
 import { dataBase } from "../dataBase.js";
+import Joi from "joi";
+
 const router = express.Router();
 
 router.get("/", (req, res) => {
@@ -7,6 +9,16 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", (req, res) => {
+  const schema = Joi.object({
+    product: Joi.string().required(),
+    price: Joi.number().required(),
+    quantity: Joi.number().required(),
+  });
+  const result = schema.validate(req.body);
+  if (result.error) {
+    res.status(400).send(result.error.details[0].message);
+    return;
+  }
   const item = {
     id: dataBase.length + 1,
     product: req.body.product,
