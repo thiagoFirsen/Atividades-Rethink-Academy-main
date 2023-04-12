@@ -56,11 +56,15 @@ const update = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     const { name, author } = req.body;
-    const updatedData: Book = { name, author };
+    const findAuthor = await knexInstance("authors")
+    .select("id")
+    .where({ name: author });
+    const authorId = findAuthor[0].id;
+    const updatedData = { name, author_id: authorId};
 
     const book = await knexInstance("books").update(updatedData).where({ id });
 
-    res.status(200).json(book);
+    res.status(200).json({id:id[0],name,author});
   } catch (error: any) {
     res.send(error.message ? { error: error.message } : error);
   }

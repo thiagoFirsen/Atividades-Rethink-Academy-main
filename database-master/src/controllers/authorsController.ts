@@ -52,11 +52,11 @@ const update = async (req: Request, res: Response) => {
     const { name, bestSeller } = req.body;
     const updatedData: Author = { name, bestSeller };
 
-    const book = await knexInstance("authors")
+    const author = await knexInstance("authors")
       .update(updatedData)
       .where({ id });
 
-    res.status(200).json(book);
+    res.status(200).json({id:id[0],name,bestSeller});
   } catch (error: any) {
     res.send(error.message ? { error: error.message } : error);
   }
@@ -65,11 +65,11 @@ const update = async (req: Request, res: Response) => {
 const remove = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    const book = await knexInstance("authors").delete().where({ id });
+    const author = await knexInstance("authors").delete().where({ id });
 
-    if (!book) throw new Error("Esse livro não existe");
+    if (!author) throw new Error("Esse autor não existe");
 
-    res.status(200).json({ msg: "Livro deletado" });
+    res.status(200).json({ msg: "autor deletado" });
   } catch (error: any) {
     res.send(error.message ? { error: error.message } : error);
   }
