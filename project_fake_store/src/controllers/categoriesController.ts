@@ -1,15 +1,11 @@
 import { Request, Response } from "express";
 import knex from "knex";
 import config from "../../knexfile";
+import { Category, Name } from "../types";
 
 const knexInstance = knex(config);
 
-type Category = {
-  id?: number;
-  name: string;
-};
-
-const index = async (req: Request, res: Response) => {
+const index = async (req: Request, res: Response): Promise<void> => {
   try {
     const categories: Category[] = await knexInstance("categories").select("*");
 
@@ -19,9 +15,9 @@ const index = async (req: Request, res: Response) => {
   }
 };
 
-const show = async (req: Request, res: Response) => {
+const show = async (req: Request, res: Response): Promise<void> => {
   try {
-    const id = req.params.id;
+    const id: number = parseInt(req.params.id);
     const categorie: Category[] = await knexInstance("categories")
       .select("*")
       .where({ "categories.id": id });
@@ -32,9 +28,9 @@ const show = async (req: Request, res: Response) => {
   }
 };
 
-const insert = async (req: Request, res: Response) => {
+const insert = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name } = req.body;
+    const { name }: Name = req.body;
 
     const id: number[] = await knexInstance("categories").insert({
       name,
@@ -49,15 +45,12 @@ const insert = async (req: Request, res: Response) => {
   }
 };
 
-const update = async (req: Request, res: Response) => {
+const update = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name } = req.body;
-    const id = req.params.id;
-    const updateCategory = {
-      name,
-    };
-    const category = await knexInstance("categories")
-      .update(updateCategory)
+    const { name }: Name = req.body;
+    const id: number = parseInt(req.params.id);
+    const category: number = await knexInstance("categories")
+      .update({ name })
       .where({ id });
     if (!category) throw new Error("Category not found");
     res.status(200).json({
@@ -68,10 +61,12 @@ const update = async (req: Request, res: Response) => {
     res.send(error.message ? { error: error.message } : error);
   }
 };
-const remove = async (req: Request, res: Response) => {
+const remove = async (req: Request, res: Response): Promise<void> => {
   try {
-    const id = req.params.id;
-    const category = await knexInstance("categories").delete().where({ id });
+    const id: number = parseInt(req.params.id);
+    const category: number = await knexInstance("categories")
+      .delete()
+      .where({ id });
     if (!category) throw new Error("Category not found");
     res.status(200).json({ info: "Product has been deleted" });
   } catch (error: any) {
