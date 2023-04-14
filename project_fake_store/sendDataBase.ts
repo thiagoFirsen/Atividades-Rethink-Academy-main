@@ -1,11 +1,13 @@
 import knex, { Knex } from "knex";
 import config from "./knexfile";
-import { ProducTForDb, Product } from "./src/types";
+import { Category, ProducTForDb, Product } from "./src/types";
 
 const knexInstance: Knex = knex(config);
 
+const url: string = "https://fakestoreapi.com/";
+
 async function seedProducts() {
-  const response: Response = await fetch("https://fakestoreapi.com/products");
+  const response: Response = await fetch(`${url}products`);
   const products: Product[] = await response.json();
 
   await Promise.all(
@@ -38,4 +40,23 @@ async function seedProducts() {
   process.exit();
 }
 
+const seedCategories = async () => {
+  try {
+    const response: Response = await fetch(`${url}products/categories`);
+    const categories: Category[] = await response.json();
+
+    await Promise.all(
+      categories.map(async (category: any) => {
+        await knexInstance("categories").insert({
+          name: category,
+        });
+      })
+    );
+    console.log(`Inserted ${categories.length} categories`);
+  } catch (error: any) {
+    console.log(error.message);
+  }
+};
+
 seedProducts();
+seedCategories();
