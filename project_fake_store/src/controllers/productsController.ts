@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import knex from "knex";
 import config from "../../knexfile";
-import { Category, ProducTForDb, Product } from "../types";
+import { Products, ProductFromDB, Category } from "../types";
 
 const knexInstance = knex(config);
 
 const index = async (req: Request, res: Response): Promise<void> => {
   try {
-    const products: Product[] = await knexInstance("products")
+    const products: Products[] = await knexInstance("products")
       .select(
         "products.id",
         "products.title",
@@ -15,10 +15,25 @@ const index = async (req: Request, res: Response): Promise<void> => {
         "products.description",
         "products.image",
         "categories.name as category ",
-        "products.rating"
+        "products.rate",
+        "products.count"
       )
       .join("categories", "categories.id", "=", "products.category_id");
-    res.status(200).send(products);
+
+    const formatedProducts: ProductFromDB[] = products.map((product) => ({
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      description: product.description,
+      category: product.category,
+      image: product.image,
+      rating: {
+        rate: product.rate,
+        count: product.count,
+      },
+    }));
+
+    res.status(200).send(formatedProducts);
   } catch (error: any) {
     res.send(error.message ? { error: error.message } : error);
   }
@@ -27,7 +42,7 @@ const index = async (req: Request, res: Response): Promise<void> => {
 const show = async (req: Request, res: Response): Promise<void> => {
   try {
     const id: number = parseInt(req.params.id);
-    const product: Product[] = await knexInstance("products")
+    const product: Products[] = await knexInstance("products")
       .select(
         "products.id",
         "products.title",
@@ -35,39 +50,26 @@ const show = async (req: Request, res: Response): Promise<void> => {
         "products.description",
         "products.image",
         "categories.name as category ",
-        "products.rating"
+        "products.rate",
+        "products.count"
       )
       .join("categories", "categories.id", "=", "products.category_id")
       .where({ "products.id": id });
     if (!product.length) throw new Error("Product not found");
-    res.status(200).send(product[0]);
-  } catch (error: any) {
-    res.send(error.message ? { error: error.message } : error);
-  }
-};
+    const formatedProducts: ProductFromDB[] = product.map((product) => ({
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      description: product.description,
+      category: product.category,
+      image: product.image,
+      rating: {
+        rate: product.rate,
+        count: product.count,
+      },
+    }));
 
-const showProducts = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const category: string = req.params.category;
-    const findCategory: Category[] = await knexInstance("categories")
-      .select("id")
-      .where({ name: category });
-    if (!findCategory[0]) {
-      throw new Error(`Category not found!`);
-    }
-    const productsFromCategory = await knexInstance("products")
-      .select(
-        "products.id",
-        "products.title",
-        "products.price",
-        "products.description",
-        "categories.name as category",
-        "products.image",
-        "products.rating"
-      )
-      .join("categories", "categories.id", "=", "products.category_id")
-      .where({ "products.category_id": findCategory[0].id });
-    res.status(200).send(productsFromCategory);
+    res.status(200).send(formatedProducts[0]);
   } catch (error: any) {
     res.send(error.message ? { error: error.message } : error);
   }
@@ -75,21 +77,29 @@ const showProducts = async (req: Request, res: Response): Promise<void> => {
 
 const insert = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { title, price, description, category, image, rating }: Product =
-      req.body;
+    const {
+      title,
+      price,
+      description,
+      category,
+      image,
+      rating,
+    }: ProductFromDB = req.body;
     const findCategory: Category[] = await knexInstance("categories")
       .select("id")
       .where({ name: category });
 
     const categoryId: number | undefined = findCategory[0].id;
     if (!categoryId) throw new Error("Category not found");
-    const product: ProducTForDb = {
+
+    const product: Products = {
       title,
       price,
       description,
       image,
       category_id: categoryId,
-      rating,
+      rate: rating.rate,
+      count: rating.count,
     };
 
     const id: number[] = await knexInstance("products").insert(product);
@@ -106,8 +116,15 @@ const insert = async (req: Request, res: Response): Promise<void> => {
 const update = async (req: Request, res: Response): Promise<void> => {
   try {
     const id: number = parseInt(req.params.id);
-    const { title, price, description, category, image, rating }: Product =
-      req.body;
+    const {
+      title,
+      price,
+      description,
+      category,
+      image,
+      rating,
+    }: ProductFromDB = req.body;
+
     const findCategory: Category[] = await knexInstance("categories")
       .select("id")
       .where({ name: category });
@@ -115,20 +132,29 @@ const update = async (req: Request, res: Response): Promise<void> => {
     const categoryId: number | undefined = findCategory[0].id;
     if (!categoryId) throw new Error("Category not found");
 
-    const updateProduct: ProducTForDb = {
+    const updateProduct: Products = {
+      id,
       title,
       price,
       description,
       image,
       category_id: categoryId,
-      rating,
+      rate: rating.rate,
+      count: rating.count,
     };
     const productId: number = await knexInstance("products")
       .update(updateProduct)
       .where({ id });
     if (!productId) throw new Error("Product not found");
-    res.status(200).json({
-      ...updateProduct,
+    res.status(200).send({
+      id,
+      title,
+      price,
+      description,
+      image,
+      category,
+      rate: rating.rate,
+      count: rating.count,
     });
   } catch (error: any) {
     res.send(error.message ? { error: error.message } : error);
@@ -147,4 +173,4 @@ const remove = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export default { index, show, insert, update, remove, showProducts };
+export default { index, show, insert, update, remove };

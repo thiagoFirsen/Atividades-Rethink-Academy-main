@@ -1,6 +1,6 @@
 import knex, { Knex } from "knex";
 import config from "./knexfile";
-import { Category, ProducTForDb, Product } from "./src/types";
+import { Category, ProductFromDB } from "./src/types";
 
 const knexInstance: Knex = knex(config);
 
@@ -8,14 +8,20 @@ const url: string = "https://fakestoreapi.com/";
 
 async function seedProducts() {
   const response: Response = await fetch(`${url}products`);
-  const products: Product[] = await response.json();
+  const products: ProductFromDB[] = await response.json();
 
   await Promise.all(
     products.map(async (product) => {
-      const { title, price, description, image, category, rating }: Product =
-        product;
+      const {
+        title,
+        price,
+        description,
+        image,
+        category,
+        rating,
+      }: ProductFromDB = product;
 
-      const categoryId: ProducTForDb = await knexInstance("categories")
+      const categoryId: Category = await knexInstance("categories")
         .select("id")
         .where("name", category)
         .first();
@@ -31,7 +37,8 @@ async function seedProducts() {
         description,
         image,
         category_id: categoryId.id,
-        rating,
+        rate: rating.rate,
+        count: rating.count,
       });
     })
   );

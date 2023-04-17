@@ -74,5 +74,45 @@ const remove = async (req: Request, res: Response): Promise<void> => {
     res.send(error.message ? { error: error.message } : error);
   }
 };
-
-export default { index, show, insert, update, remove };
+const showProducts = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const category: string = req.params.category;
+    const findCategory: Category[] = await knexInstance("categories")
+      .select("id")
+      .where({ name: category });
+    if (!findCategory[0]) {
+      throw new Error(`Category not found!`);
+    }
+    const productsFromCategory = await knexInstance("products")
+      .select(
+        "products.id",
+        "products.title",
+        "products.price",
+        "products.description",
+        "products.image",
+        "categories.name as category ",
+        "products.rate",
+        "products.count"
+      )
+      .join("categories", "categories.id", "=", "products.category_id")
+      .where({ "products.category_id": findCategory[0].id });
+    const formatedProducts = productsFromCategory.map(
+      (productsFromCategory) => ({
+        id: productsFromCategory.id,
+        title: productsFromCategory.title,
+        price: productsFromCategory.price,
+        description: productsFromCategory.description,
+        category: productsFromCategory.category,
+        image: productsFromCategory.image,
+        rating: {
+          rate: productsFromCategory.rate,
+          count: productsFromCategory.count,
+        },
+      })
+    );
+    res.status(200).send(formatedProducts);
+  } catch (error: any) {
+    res.send(error.message ? { error: error.message } : error);
+  }
+};
+export default { index, show, insert, update, remove, showProducts };
