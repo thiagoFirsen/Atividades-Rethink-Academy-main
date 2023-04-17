@@ -3,6 +3,7 @@ import productsController from "../controllers/productsController";
 
 const router: Router = Router();
 
+router.get("/:category", productsController.showProducts);
 router.get("/", productsController.index);
 router.get("/:id", productsController.show);
 router.post("/", productsController.insert);
