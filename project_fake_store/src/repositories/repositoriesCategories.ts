@@ -4,31 +4,27 @@ import { Knex } from "knex";
 
 const knexInstance: Knex = knex(config);
 
-const selectAllCategories = async () =>
-  await knexInstance("categories").select("*");
+const selectAllCategories = () => knexInstance("categories").select("*");
 
-const selectOneCategory = async (id: number) =>
-  await knexInstance("categories").select("*").where({ "categories.id": id });
+const selectCategory = (id: number) =>
+  knexInstance("categories").select("*").where({ "categories.id": id });
 
-const insertOneCategory = async (name: string) =>
-  await knexInstance("categories").insert({
+const insertCategory = (name: string) =>
+  knexInstance("categories").insert({
     name,
   });
 
-const updateOneCategory = async (id: number, name: string) =>
-  await knexInstance("categories").update({ name }).where({ id });
+const updateCategory = (id: number, name: string) =>
+  knexInstance("categories").update({ name }).where({ id });
 
-const deleteOneCategory = async (id: number) =>
-  await knexInstance("categories").delete().where({ id });
+const deleteCategory = (id: number) =>
+  knexInstance("categories").delete().where({ id });
 
-const selectProductsByCategory = async (category: string) => {
-  const findCategory = await knexInstance("categories")
-    .select("id")
-    .where({ name: category });
-  if (!findCategory[0]) {
-    throw new Error(`Category not found!`);
-  }
-  return await knexInstance("products")
+const findCategory = (category: string) =>
+  knexInstance("categories").select("id").where({ name: category });
+
+const selectProductsByCategory = (categoryId: number) => {
+  return knexInstance("products")
     .select(
       "products.id",
       "products.title",
@@ -40,14 +36,15 @@ const selectProductsByCategory = async (category: string) => {
       "products.count"
     )
     .join("categories", "categories.id", "=", "products.category_id")
-    .where({ "products.category_id": findCategory[0].id });
+    .where({ "products.category_id": categoryId });
 };
 
 export default {
   selectAllCategories,
-  selectOneCategory,
-  insertOneCategory,
-  updateOneCategory,
-  deleteOneCategory,
+  selectCategory,
+  insertCategory,
+  updateCategory,
+  deleteCategory,
+  findCategory,
   selectProductsByCategory,
 };

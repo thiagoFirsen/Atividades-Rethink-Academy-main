@@ -14,7 +14,7 @@ const index = async (req: Request, res: Response): Promise<void> => {
 const show = async (req: Request, res: Response): Promise<void> => {
   try {
     const id: number = parseInt(req.params.id);
-    const product = await serviceProducts.getOneProduct(id);
+    const product = await serviceProducts.getProduct(id);
     res.status(200).send(product);
   } catch (error: any) {
     res.send(error.message ? { error: error.message } : error);
@@ -39,7 +39,7 @@ const insert = async (req: Request, res: Response): Promise<void> => {
       image,
       rating,
     };
-    const insertProduct = await serviceProducts.postOneProduct(product);
+    const insertProduct = await serviceProducts.postProduct(product);
     res.send({ id: insertProduct[0], ...product });
   } catch (error: any) {
     res.send(error.message ? { error: error.message } : error);

@@ -1,71 +1,47 @@
-import { up } from "../database/20230413162907_create_table_categories";
 import repositoriesCategories from "../repositories/repositoriesCategories";
 
 const getAllCategories = async () => {
-  try {
-    const categories = await repositoriesCategories.selectAllCategories();
-    const categoriesFormat = categories.map((category) => category.name);
-    return categoriesFormat;
-  } catch (error: any) {
-    return error.message ? { error: error.message } : error;
-  }
+  const categories = await repositoriesCategories.selectAllCategories();
+  const categoriesFormat = categories.map((category) => category.name);
+  return categoriesFormat;
 };
 
-const getOneCategory = async (id: number) => {
-  try {
-    const category = await repositoriesCategories.selectOneCategory(id);
-    if (!category.length) throw new Error("Categorie not found");
-    return category;
-  } catch (error: any) {
-    return error.message ? { error: error.message } : error;
-  }
+const getCategory = async (id: number) => {
+  const category = await repositoriesCategories.selectCategory(id);
+  if (!category.length) throw new Error("Categorie not found");
+  return category;
 };
 
-const postOneCategory = async (name: string) => {
-  try {
-    const newCategory = await repositoriesCategories.insertOneCategory(name);
-    return newCategory;
-  } catch (error: any) {
-    return error.message ? { error: error.message } : error;
-  }
+const createCategory = async (name: string) => {
+  const newCategory = await repositoriesCategories.insertCategory(name);
+  return newCategory;
 };
 const updateCategory = async (id: number, name: string) => {
-  try {
-    const updateCategory = await repositoriesCategories.updateOneCategory(
-      id,
-      name
-    );
-    if (!updateCategory) throw new Error("Category not found");
-    return updateCategory;
-  } catch (error: any) {
-    return error.message ? { error: error.message } : error;
-  }
+  const updateCategory = await repositoriesCategories.updateCategory(id, name);
+  if (!updateCategory) throw new Error("Category not found");
+  return updateCategory;
 };
 
 const deleteCategory = async (id: number) => {
-  try {
-    const deleteCategory = await repositoriesCategories.deleteOneCategory(id);
-    if (!deleteCategory) throw new Error("Category not found");
-    return deleteCategory;
-  } catch (error: any) {
-    return error.message ? { error: error.message } : error;
-  }
+  const deleteCategory = await repositoriesCategories.deleteCategory(id);
+  if (!deleteCategory) throw new Error("Category not found");
+  return deleteCategory;
 };
 
 const getProductsByCategory = async (category: string) => {
-  try {
-    const productsByCategory =
-      await repositoriesCategories.selectProductsByCategory(category);
-    return productsByCategory;
-  } catch (error: any) {
-    return error.message ? { error: error.message } : error;
+  const findCategory: any = repositoriesCategories.findCategory(category);
+  if (!findCategory) {
+    throw new Error(`Category not found!`);
   }
+  const productsByCategory =
+    await repositoriesCategories.selectProductsByCategory(findCategory);
+  return productsByCategory;
 };
 
 export default {
   getAllCategories,
-  getOneCategory,
-  postOneCategory,
+  getCategory,
+  createCategory,
   updateCategory,
   deleteCategory,
   getProductsByCategory,

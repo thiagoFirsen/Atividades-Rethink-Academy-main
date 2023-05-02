@@ -14,7 +14,7 @@ const index = async (req: Request, res: Response): Promise<void> => {
 const show = async (req: Request, res: Response): Promise<void> => {
   try {
     const id: number = parseInt(req.params.id);
-    const category = await serviceCategories.getOneCategory(id);
+    const category = await serviceCategories.getCategory(id);
     res.status(200).send(category[0]);
   } catch (error: any) {
     res.send(error.message ? { error: error.message } : error);
@@ -24,7 +24,7 @@ const show = async (req: Request, res: Response): Promise<void> => {
 const insert = async (req: Request, res: Response): Promise<void> => {
   try {
     const { name }: Name = req.body;
-    const newCategory: any = await serviceCategories.postOneCategory(name);
+    const newCategory: any = await serviceCategories.createCategory(name);
     res.status(201).send({ id: newCategory[0], name });
   } catch (error: any) {
     res.send(error.message ? { error: error.message } : error);
