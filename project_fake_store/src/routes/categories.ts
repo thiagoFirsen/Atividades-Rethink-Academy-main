@@ -4,7 +4,7 @@ import categoriesController from "../controllers/categoriesController";
 const categories: Router = Router();
 const category: Router = Router();
 
-category.get("/:category", categoriesController.showProducts);
+category.get("/:category", categoriesController.showProductsByCategory);
 categories.get("/", categoriesController.index);
 categories.get("/:id", categoriesController.show);
 categories.post("/", categoriesController.insert);
