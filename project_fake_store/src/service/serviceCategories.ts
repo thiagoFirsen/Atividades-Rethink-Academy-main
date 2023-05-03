@@ -1,4 +1,5 @@
 import repositoriesCategories from "../repositories/repositoriesCategories";
+import { Category } from "../types";
 
 const getAllCategories = async () => {
   const categories = await repositoriesCategories.selectAllCategories();

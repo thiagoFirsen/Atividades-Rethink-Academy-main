@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import serviceCategories from "../service/serviceCategories";
-import { Category, Name } from "../types";
+import { Category, Name, Products } from "../types";
 
 const index = async (req: Request, res: Response): Promise<void> => {
   try {
-    const allCategories = await serviceCategories.getAllCategories();
+    const allCategories: string[] = await serviceCategories.getAllCategories();
     res.status(200).send(allCategories);
   } catch (error: any) {
     res.send(error.message ? { error: error.message } : error);
@@ -14,7 +14,7 @@ const index = async (req: Request, res: Response): Promise<void> => {
 const show = async (req: Request, res: Response): Promise<void> => {
   try {
     const id: number = parseInt(req.params.id);
-    const category = await serviceCategories.getCategory(id);
+    const category: Category[] = await serviceCategories.getCategory(id);
     res.status(200).send(category[0]);
   } catch (error: any) {
     res.send(error.message ? { error: error.message } : error);
@@ -24,7 +24,9 @@ const show = async (req: Request, res: Response): Promise<void> => {
 const insert = async (req: Request, res: Response): Promise<void> => {
   try {
     const { name }: Name = req.body;
-    const newCategory: any = await serviceCategories.createCategory(name);
+    const newCategory: Category[] = await serviceCategories.createCategory(
+      name
+    );
     res.status(201).send({ id: newCategory[0], name });
   } catch (error: any) {
     res.send(error.message ? { error: error.message } : error);
@@ -35,7 +37,10 @@ const update = async (req: Request, res: Response): Promise<void> => {
   try {
     const { name }: Name = req.body;
     const id: number = parseInt(req.params.id);
-    const updateCategory = await serviceCategories.updateCategory(id, name);
+    const updateCategory: number = await serviceCategories.updateCategory(
+      id,
+      name
+    );
 
     res.status(200).json({
       id,
@@ -48,7 +53,7 @@ const update = async (req: Request, res: Response): Promise<void> => {
 const remove = async (req: Request, res: Response): Promise<void> => {
   try {
     const id: number = parseInt(req.params.id);
-    const deleteCategory = await serviceCategories.deleteCategory(id);
+    const deleteCategory: number = await serviceCategories.deleteCategory(id);
     res.status(200).json({ info: "Product has been deleted" });
   } catch (error: any) {
     res.send(error.message ? { error: error.message } : error);
@@ -60,9 +65,8 @@ const showProductsByCategory = async (
 ): Promise<void> => {
   try {
     const category: string = req.params.category;
-    const productsByCategory = await serviceCategories.getProductsByCategory(
-      category
-    );
+    const productsByCategory: Products[] =
+      await serviceCategories.getProductsByCategory(category);
     const formatedProducts = productsByCategory.map((product: any) => ({
       id: product.id,
       title: product.title,

@@ -1,29 +1,33 @@
 import knex from "knex";
 import config from "../../knexfile";
 import { Knex } from "knex";
+import { Category, Products } from "../types";
 
 const knexInstance: Knex = knex(config);
 
-const selectAllCategories = () => knexInstance("categories").select("*");
+const selectAllCategories = (): Promise<Array<Category>> =>
+  knexInstance("categories").select("*");
 
-const selectCategory = (id: number) =>
+const selectCategory = (id: number): Promise<Array<Category>> =>
   knexInstance("categories").select("*").where({ "categories.id": id });
 
-const insertCategory = (name: string) =>
+const insertCategory = (name: string): Promise<Array<Category>> =>
   knexInstance("categories").insert({
     name,
   });
 
-const updateCategory = (id: number, name: string) =>
+const updateCategory = (id: number, name: string): Promise<number> =>
   knexInstance("categories").update({ name }).where({ id });
 
-const deleteCategory = (id: number) =>
+const deleteCategory = (id: number): Promise<number> =>
   knexInstance("categories").delete().where({ id });
 
-const findCategory = (category: string) =>
+const findCategory = (category: string): Promise<Array<Category>> =>
   knexInstance("categories").select("id").where({ name: category });
 
-const selectProductsByCategory = (categoryId: number) => {
+const selectProductsByCategory = (
+  categoryId: number
+): Promise<Array<Products>> => {
   return knexInstance("products")
     .select(
       "products.id",

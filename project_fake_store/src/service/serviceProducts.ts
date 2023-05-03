@@ -1,9 +1,9 @@
 import repositoriesProducts from "../repositories/repositoriesProducts";
 import { Products, ProductFromDB, Category } from "../types";
 
-const getAllProducts = async () => {
-  const products = await repositoriesProducts.selectAllProducts();
-  const formatedProducts = products.map((product) => ({
+const getAllProducts = async (): Promise<ProductFromDB[]> => {
+  const products: Products[] = await repositoriesProducts.selectAllProducts();
+  const formatedProducts: ProductFromDB[] = products.map((product) => ({
     id: product.id,
     title: product.title,
     price: product.price,
@@ -18,9 +18,9 @@ const getAllProducts = async () => {
   return formatedProducts;
 };
 
-const getProduct = async (id: number) => {
-  const product = await repositoriesProducts.selectProduct(id);
-  const formatedProducts = product.map((product) => ({
+const getProduct = async (id: number): Promise<ProductFromDB> => {
+  const product: Products[] = await repositoriesProducts.selectProduct(id);
+  const formatedProducts: ProductFromDB[] = product.map((product) => ({
     id: product.id,
     title: product.title,
     price: product.price,
@@ -36,10 +36,12 @@ const getProduct = async (id: number) => {
   return formatedProducts[0];
 };
 
-const postProduct = async (product: ProductFromDB) => {
-  const { category, rating, ...data } = product;
+const postProduct = async (product: ProductFromDB): Promise<Products[]> => {
+  const { category, rating, ...data }: ProductFromDB = product;
 
-  const categoryId = await repositoriesProducts.selectProductCategory(category);
+  const categoryId: any = await repositoriesProducts.selectProductCategory(
+    category
+  );
   if (!categoryId[0].id) throw new Error("Category not found");
   const formatedProduct: Products = {
     ...data,
@@ -50,9 +52,12 @@ const postProduct = async (product: ProductFromDB) => {
   return repositoriesProducts.insertProduct(formatedProduct);
 };
 
-const updateProduct = async (id: any, product: any) => {
-  const { category, rating, ...data } = product;
-  const categoryId = await repositoriesProducts.selectProductCategory(category);
+const updateProduct = async (id: any, product: any): Promise<number> => {
+  const { category, rating, ...data }: ProductFromDB = product;
+  const selectedCategory = await repositoriesProducts.selectProductCategory(
+    category
+  );
+  const categoryId = selectedCategory[0].id;
   if (!categoryId) throw new Error("Category not found");
   const updateProduct: Products = {
     ...data,
@@ -60,14 +65,19 @@ const updateProduct = async (id: any, product: any) => {
     rate: rating.rate,
     count: rating.count,
   };
-  const productId = await repositoriesProducts.updateProduct(id, updateProduct);
+  const productId: number = await repositoriesProducts.updateProduct(
+    id,
+    updateProduct
+  );
 
   if (!productId) throw new Error("Product not found");
+  return productId;
 };
 
-const deleteProduct = async (id: any) => {
-  const product = await repositoriesProducts.deleteProduct(id);
+const deleteProduct = async (id: any): Promise<number> => {
+  const product: number = await repositoriesProducts.deleteProduct(id);
   if (!product) throw new Error("Product not found");
+  return product;
 };
 
 export default {
