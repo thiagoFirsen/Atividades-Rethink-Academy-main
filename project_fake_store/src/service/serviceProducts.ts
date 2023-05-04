@@ -1,7 +1,6 @@
 import repositoriesProducts from "../repositories/repositoriesProducts";
 import { makeError } from "../Middlewares/errorHandler";
 import { Products, ProductFromDB, Category } from "../types";
-import productDataValidator from "../Middlewares/productDataValidator";
 
 const getAllProducts = async (): Promise<ProductFromDB[]> => {
   const products: Products[] = await repositoriesProducts.selectAllProducts();
@@ -80,16 +79,18 @@ const updateProduct = async (id: any, product: any): Promise<number> => {
   return productId;
 };
 
-const partiallyUpdateProduct = async (id: number, product: any) => {
-  const newProduct = { ...product, ...product.rating };
+const partiallyUpdateProduct = async (
+  id: number,
+  product: any
+): Promise<ProductFromDB> => {
+  const newProduct: any = { ...product, ...product.rating };
   delete newProduct.rating;
   delete newProduct.category;
 
-  let categoryId;
+  let categoryId: number | undefined;
   if (product.category) {
-    const category = await repositoriesProducts.selectProductCategory(
-      product.category
-    );
+    const category: Category[] =
+      await repositoriesProducts.selectProductCategory(product.category);
     if (category.length === 0) {
       throw makeError({ message: "Categoria não existe", status: 400 });
     }
@@ -101,10 +102,12 @@ const partiallyUpdateProduct = async (id: number, product: any) => {
     ...newProduct,
     category_id: product.category ? categoryId : undefined,
   });
-  const productFromDatabase = await repositoriesProducts.selectProduct(id);
-  const { rate, count, ...dataProduct } = productFromDatabase[0];
+  const productFromDatabase: Products[] =
+    await repositoriesProducts.selectProduct(id);
 
-  const formatedProduct = {
+  const { rate, count, ...dataProduct }: Products = productFromDatabase[0];
+
+  const formatedProduct: ProductFromDB = {
     ...dataProduct,
     rating: {
       rate: productFromDatabase[0].rate,
