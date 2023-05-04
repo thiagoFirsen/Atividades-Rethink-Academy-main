@@ -100,14 +100,12 @@ const partiallyUpdate = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   try {
     const id: number = parseInt(req.params.id);
-    const product = req.body;
-    const updateProduct = await serviceProducts.partiallyUpdateProduct(
-      id,
-      product
-    );
+    const product: any = req.body;
+    const updateProduct: ProductFromDB =
+      await serviceProducts.partiallyUpdateProduct(id, product);
     res.status(200).send(updateProduct);
   } catch (error) {
     next(error);
