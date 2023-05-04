@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { object, string, number } from "yup";
 
+const hasTrueStrict = { strict: true };
 const productPathValidator = async (
   req: Request,
   res: Response,
@@ -11,7 +12,7 @@ const productPathValidator = async (
     const pathProductSchema = object({
       id: string().required("Id é obrigatorio"),
     });
-    await pathProductSchema.validate(pathProduct);
+    await pathProductSchema.validate(pathProduct, hasTrueStrict);
     next();
   } catch (error) {
     next(error);
@@ -38,7 +39,7 @@ const productInsertionValidator = async (
       }),
     });
 
-    await productSchema.validate(productData);
+    await productSchema.validate(productData, hasTrueStrict);
     next();
   } catch (error) {
     next(error);
@@ -70,8 +71,8 @@ const productPutValidator = async (
       id: string().required("Id é obrigatorio"),
     });
 
-    await pathProductSchema.validate(pathProduct);
-    await productSchema.validate(productData);
+    await pathProductSchema.validate(pathProduct, hasTrueStrict);
+    await productSchema.validate(productData, hasTrueStrict);
     next();
   } catch (error) {
     next(error);
@@ -103,8 +104,8 @@ const productPatchValidator = async (
       id: string().required("Id é obrigatorio"),
     });
 
-    await pathProductSchema.validate(pathProduct);
-    await productSchema.validate(productData);
+    await pathProductSchema.validate(pathProduct, hasTrueStrict);
+    await productSchema.validate(productData, hasTrueStrict);
     next();
   } catch (error) {
     next(error);

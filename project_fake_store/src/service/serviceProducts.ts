@@ -96,13 +96,23 @@ const partiallyUpdateProduct = async (id: number, product: any) => {
 
     categoryId = category[0].id;
   }
+
   await repositoriesProducts.updateProduct(id, {
     ...newProduct,
     category_id: product.category ? categoryId : undefined,
   });
   const productFromDatabase = await repositoriesProducts.selectProduct(id);
+  const { rate, count, ...dataProduct } = productFromDatabase[0];
 
-  return productFromDatabase;
+  const formatedProduct = {
+    ...dataProduct,
+    rating: {
+      rate: productFromDatabase[0].rate,
+      count: productFromDatabase[0].count,
+    },
+  };
+
+  return formatedProduct;
 };
 
 const deleteProduct = async (id: any): Promise<number> => {

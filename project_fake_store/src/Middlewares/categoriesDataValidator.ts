@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { object, string, number } from "yup";
+const hasTrueStrict = { strict: true };
 
 const categoryPathValidator = async (
   req: Request,
@@ -11,7 +12,7 @@ const categoryPathValidator = async (
     const pathCategorySchema = object({
       id: string().required("Id é obrigatorio"),
     });
-    await pathCategorySchema.validate(pathCategory);
+    await pathCategorySchema.validate(pathCategory, hasTrueStrict);
     next();
   } catch (error) {
     next(error);
@@ -27,7 +28,7 @@ const categoryNameValidator = async (
     const pathCategorySchema = object({
       category: string().required("Categoria é obrigatorio"),
     });
-    await pathCategorySchema.validate(pathCategory);
+    await pathCategorySchema.validate(pathCategory, hasTrueStrict);
     next();
   } catch (error) {
     next(error);
@@ -46,7 +47,7 @@ const categoryInsertionValidator = async (
       name: string().required("Nome da nova categoria é obrigatoria"),
     });
 
-    await categorySchema.validate(categoryData);
+    await categorySchema.validate(categoryData, hasTrueStrict);
     next();
   } catch (error) {
     next(error);
@@ -70,8 +71,8 @@ const categoryPutValidator = async (
       id: string().required("Id é obrigatorio"),
     });
 
-    await pathCategorySchema.validate(pathCategory);
-    await categorySchema.validate(categoryData);
+    await pathCategorySchema.validate(pathCategory, hasTrueStrict);
+    await categorySchema.validate(categoryData, hasTrueStrict);
     next();
   } catch (error) {
     next(error);
