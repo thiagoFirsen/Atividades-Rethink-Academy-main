@@ -19,10 +19,16 @@ router.post(
   productsController.insert
 );
 
-router.put("/:id", middleware.productPutValidator, productsController.update);
+router.put(
+  "/:id",
+  middleware.productPathValidator,
+  middleware.productPutValidator,
+  productsController.update
+);
 
 router.patch(
   "/:id",
+  middleware.productPathValidator,
   middleware.productPatchValidator,
   productsController.partiallyUpdate
 );

@@ -27,6 +27,7 @@ categories.post(
 
 categories.put(
   "/:id",
+  middleware.categoryPathValidator,
   middleware.categoryPutValidator,
   categoriesController.update
 );

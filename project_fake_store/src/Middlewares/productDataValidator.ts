@@ -2,16 +2,15 @@ import { NextFunction, Request, Response } from "express";
 import { object, string, number } from "yup";
 
 const hasTrueStrict = { strict: true };
+
 const productPathValidator = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const pathProduct = req.params;
-    const pathProductSchema = object({
-      id: string().required("Id é obrigatorio"),
-    });
+    const pathProduct = parseInt(req.params.id);
+    const pathProductSchema = number().required("Id é obrigatorio");
     await pathProductSchema.validate(pathProduct, hasTrueStrict);
     next();
   } catch (error) {
@@ -28,14 +27,14 @@ const productInsertionValidator = async (
     const productData = req.body;
 
     const productSchema = object({
-      title: string().required(),
-      price: number().required(),
-      description: string().required(),
+      title: string().required("Título é obrigatorio"),
+      price: number().required("Preço é obrigatorio"),
+      description: string().required("Descrição é obrigatorio"),
       category: string().required("Categoria é obrigatorio"),
-      image: string().required(),
+      image: string().required("Imagem é obrigatorio"),
       rating: object({
-        rate: number().required(),
-        count: number().required(),
+        rate: number().required("Rate é obrigatorio"),
+        count: number().required("Count é obrigatorio"),
       }),
     });
 
@@ -52,26 +51,20 @@ const productPutValidator = async (
   next: NextFunction
 ) => {
   try {
-    const pathProduct = req.params;
     const productData = req.body;
 
     const productSchema = object({
-      title: string().required(),
-      price: number().required(),
-      description: string().required(),
+      title: string().required("Título é obrigatorio"),
+      price: number().required("Preço é obrigatorio"),
+      description: string().required("Descrição é obrigatorio"),
       category: string().required("Categoria é obrigatorio"),
-      image: string().required(),
+      image: string().required("Imagem é obrigatorio"),
       rating: object({
-        rate: number().required(),
-        count: number().required(),
+        rate: number().required("Rate é obrigatorio"),
+        count: number().required("Count é obrigatorio"),
       }),
     });
 
-    const pathProductSchema = object({
-      id: string().required("Id é obrigatorio"),
-    });
-
-    await pathProductSchema.validate(pathProduct, hasTrueStrict);
     await productSchema.validate(productData, hasTrueStrict);
     next();
   } catch (error) {
@@ -85,7 +78,6 @@ const productPatchValidator = async (
   next: NextFunction
 ) => {
   try {
-    const pathProduct = req.params;
     const productData = req.body;
 
     const productSchema = object({
@@ -100,11 +92,6 @@ const productPatchValidator = async (
       }),
     });
 
-    const pathProductSchema = object({
-      id: string().required("Id é obrigatorio"),
-    });
-
-    await pathProductSchema.validate(pathProduct, hasTrueStrict);
     await productSchema.validate(productData, hasTrueStrict);
     next();
   } catch (error) {
