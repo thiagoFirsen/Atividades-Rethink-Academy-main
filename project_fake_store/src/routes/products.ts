@@ -13,23 +13,19 @@ router.get("/", productsController.index);
 
 router.get("/:id", middleware.productPathValidator, productsController.show);
 
-router.post(
-  "/",
-  middleware.productInsertionValidator,
-  productsController.insert
-);
+router.post("/", middleware.productDataValidator, productsController.insert);
 
 router.put(
   "/:id",
   middleware.productPathValidator,
-  middleware.productPutValidator,
+  middleware.productDataValidator,
   productsController.update
 );
 
 router.patch(
   "/:id",
   middleware.productPathValidator,
-  middleware.productPatchValidator,
+  middleware.partialProductValidator,
   productsController.partiallyUpdate
 );
 

@@ -18,7 +18,7 @@ const productPathValidator = async (
   }
 };
 
-const productInsertionValidator = async (
+const productDataValidator = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -35,7 +35,7 @@ const productInsertionValidator = async (
       rating: object({
         rate: number().required("Rate é obrigatorio"),
         count: number().required("Count é obrigatorio"),
-      }),
+      }).required("Rating é obrigatorio"),
     });
 
     await productSchema.validate(productData, hasTrueStrict);
@@ -45,34 +45,7 @@ const productInsertionValidator = async (
   }
 };
 
-const productPutValidator = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const productData = req.body;
-
-    const productSchema = object({
-      title: string().required("Título é obrigatorio"),
-      price: number().required("Preço é obrigatorio"),
-      description: string().required("Descrição é obrigatorio"),
-      category: string().required("Categoria é obrigatorio"),
-      image: string().required("Imagem é obrigatorio"),
-      rating: object({
-        rate: number().required("Rate é obrigatorio"),
-        count: number().required("Count é obrigatorio"),
-      }),
-    });
-
-    await productSchema.validate(productData, hasTrueStrict);
-    next();
-  } catch (error) {
-    next(error);
-  }
-};
-
-const productPatchValidator = async (
+const partialProductValidator = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -101,7 +74,6 @@ const productPatchValidator = async (
 
 export default {
   productPathValidator,
-  productInsertionValidator,
-  productPutValidator,
-  productPatchValidator,
+  productDataValidator,
+  partialProductValidator,
 };

@@ -8,15 +8,17 @@ const categoryPathValidator = async (
   next: NextFunction
 ) => {
   try {
-    const pathCategory = parseInt(req.params.id);
-    const pathCategorySchema = number().required("Id é obrigatorio");
+    const pathCategory = req.params;
+    const pathCategorySchema = object({
+      id: string().required("Id é obrigatorio"),
+    });
     await pathCategorySchema.validate(pathCategory, hasTrueStrict);
     next();
   } catch (error) {
     next(error);
   }
 };
-const categoryNameValidator = async (
+const categoryPathNameValidator = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -32,27 +34,7 @@ const categoryNameValidator = async (
     next(error);
   }
 };
-
-const categoryInsertionValidator = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const categoryData = req.body;
-
-    const categorySchema = object({
-      name: string().required("Nome da nova categoria é obrigatoria"),
-    });
-
-    await categorySchema.validate(categoryData, hasTrueStrict);
-    next();
-  } catch (error) {
-    next(error);
-  }
-};
-
-const categoryPutValidator = async (
+const categoryDataValidator = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -72,8 +54,7 @@ const categoryPutValidator = async (
 };
 
 export default {
-  categoryNameValidator,
+  categoryPathNameValidator,
   categoryPathValidator,
-  categoryInsertionValidator,
-  categoryPutValidator,
+  categoryDataValidator,
 };

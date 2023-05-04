@@ -7,7 +7,7 @@ const category: Router = Router();
 
 category.get(
   "/:category",
-  middleware.categoryNameValidator,
+  middleware.categoryPathNameValidator,
   categoriesController.showProductsByCategory
 );
 
@@ -21,14 +21,14 @@ categories.get(
 
 categories.post(
   "/",
-  middleware.categoryInsertionValidator,
+  middleware.categoryDataValidator,
   categoriesController.insert
 );
 
 categories.put(
   "/:id",
   middleware.categoryPathValidator,
-  middleware.categoryPutValidator,
+  middleware.categoryDataValidator,
   categoriesController.update
 );
 
