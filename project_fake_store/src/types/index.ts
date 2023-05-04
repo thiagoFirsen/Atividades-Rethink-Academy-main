@@ -32,4 +32,10 @@ interface Products extends ProductsDefault {
   count: number;
 }
 
-export { Category, Name, ProductFromDB, Products };
+type ErrorType = {
+  message: string;
+  status: number;
+  stack?: string;
+};
+
+export { Category, Name, ProductFromDB, Products, ErrorType };

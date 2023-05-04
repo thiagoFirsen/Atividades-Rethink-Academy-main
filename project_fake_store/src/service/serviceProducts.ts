@@ -1,4 +1,5 @@
 import repositoriesProducts from "../repositories/repositoriesProducts";
+import { makeError } from "../Middlewares/errorHandler";
 import { Products, ProductFromDB, Category } from "../types";
 
 const getAllProducts = async (): Promise<ProductFromDB[]> => {
@@ -32,7 +33,8 @@ const getProduct = async (id: number): Promise<ProductFromDB> => {
       count: product.count,
     },
   }));
-  if (!product.length) throw new Error("Product not found");
+  if (!product.length)
+    throw makeError({ message: "Product not found", status: 400 });
   return formatedProducts[0];
 };
 
@@ -42,7 +44,8 @@ const postProduct = async (product: ProductFromDB): Promise<Products[]> => {
   const categoryId: any = await repositoriesProducts.selectProductCategory(
     category
   );
-  if (!categoryId[0].id) throw new Error("Category not found");
+  if (!categoryId[0].id)
+    throw makeError({ message: "Category not found", status: 400 });
   const formatedProduct: Products = {
     ...data,
     category_id: categoryId[0].id,
@@ -58,7 +61,8 @@ const updateProduct = async (id: any, product: any): Promise<number> => {
     category
   );
   const categoryId = selectedCategory[0].id;
-  if (!categoryId) throw new Error("Category not found");
+  if (!categoryId)
+    throw makeError({ message: "Category not found", status: 400 });
   const updateProduct: Products = {
     ...data,
     category_id: categoryId,
@@ -70,13 +74,14 @@ const updateProduct = async (id: any, product: any): Promise<number> => {
     updateProduct
   );
 
-  if (!productId) throw new Error("Product not found");
+  if (!productId)
+    throw makeError({ message: "Product not found", status: 400 });
   return productId;
 };
 
 const deleteProduct = async (id: any): Promise<number> => {
   const product: number = await repositoriesProducts.deleteProduct(id);
-  if (!product) throw new Error("Product not found");
+  if (!product) throw makeError({ message: "Product not found", status: 400 });
   return product;
 };
 
