@@ -78,8 +78,42 @@ const productPutValidator = async (
   }
 };
 
+const productPatchValidator = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const pathProduct = req.params;
+    const productData = req.body;
+
+    const productSchema = object({
+      title: string(),
+      price: number(),
+      description: string(),
+      category: string(),
+      image: string(),
+      rating: object({
+        rate: number(),
+        count: number(),
+      }),
+    });
+
+    const pathProductSchema = object({
+      id: string().required("Id é obrigatorio"),
+    });
+
+    await pathProductSchema.validate(pathProduct);
+    await productSchema.validate(productData);
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   productPathValidator,
   productInsertionValidator,
   productPutValidator,
+  productPatchValidator,
 };

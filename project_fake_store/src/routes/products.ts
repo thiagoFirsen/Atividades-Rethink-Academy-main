@@ -21,7 +21,11 @@ router.post(
 
 router.put("/:id", middleware.productPutValidator, productsController.update);
 
-router.patch("/:id", productsController.partiallyUpdate);
+router.patch(
+  "/:id",
+  middleware.productPatchValidator,
+  productsController.partiallyUpdate
+);
 
 router.delete(
   "/:id",
