@@ -95,6 +95,24 @@ const update = async (
     next(error);
   }
 };
+
+const partiallyUpdate = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const id: number = parseInt(req.params.id);
+    const product = req.body;
+    const updateProduct = await serviceProducts.partiallyUpdateProduct(
+      id,
+      product
+    );
+    res.status(200).send(updateProduct);
+  } catch (error) {
+    next(error);
+  }
+};
 const remove = async (
   req: Request,
   res: Response,
@@ -109,4 +127,4 @@ const remove = async (
   }
 };
 
-export default { index, show, insert, update, remove };
+export default { index, show, insert, update, remove, partiallyUpdate };

@@ -1,6 +1,7 @@
 import repositoriesProducts from "../repositories/repositoriesProducts";
 import { makeError } from "../Middlewares/errorHandler";
 import { Products, ProductFromDB, Category } from "../types";
+import productDataValidator from "../Middlewares/productDataValidator";
 
 const getAllProducts = async (): Promise<ProductFromDB[]> => {
   const products: Products[] = await repositoriesProducts.selectAllProducts();
@@ -79,6 +80,31 @@ const updateProduct = async (id: any, product: any): Promise<number> => {
   return productId;
 };
 
+const partiallyUpdateProduct = async (id: number, product: any) => {
+  const newProduct = { ...product, ...product.rating };
+  delete newProduct.rating;
+  delete newProduct.category;
+
+  let categoryId;
+  if (product.category) {
+    const category = await repositoriesProducts.selectProductCategory(
+      product.category
+    );
+    if (category.length === 0) {
+      throw makeError({ message: "Categoria não existe", status: 400 });
+    }
+
+    categoryId = category[0].id;
+  }
+  await repositoriesProducts.updateProduct(id, {
+    ...newProduct,
+    category_id: product.category ? categoryId : undefined,
+  });
+  const productFromDatabase = await repositoriesProducts.selectProduct(id);
+
+  return productFromDatabase;
+};
+
 const deleteProduct = async (id: any): Promise<number> => {
   const product: number = await repositoriesProducts.deleteProduct(id);
   if (!product) throw makeError({ message: "Product not found", status: 400 });
@@ -90,5 +116,6 @@ export default {
   getProduct,
   postProduct,
   updateProduct,
+  partiallyUpdateProduct,
   deleteProduct,
 };

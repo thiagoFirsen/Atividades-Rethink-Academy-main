@@ -1,14 +1,40 @@
 import { Router } from "express";
 import categoriesController from "../controllers/categoriesController";
+import middleware from "../Middlewares/categoriesDataValidator";
 
 const categories: Router = Router();
 const category: Router = Router();
 
-category.get("/:category", categoriesController.showProductsByCategory);
+category.get(
+  "/:category",
+  middleware.categoryNameValidator,
+  categoriesController.showProductsByCategory
+);
+
 categories.get("/", categoriesController.index);
-categories.get("/:id", categoriesController.show);
-categories.post("/", categoriesController.insert);
-categories.put("/:id", categoriesController.update);
-categories.delete("/:id", categoriesController.remove);
+
+categories.get(
+  "/:id",
+  middleware.categoryPathValidator,
+  categoriesController.show
+);
+
+categories.post(
+  "/",
+  middleware.categoryInsertionValidator,
+  categoriesController.insert
+);
+
+categories.put(
+  "/:id",
+  middleware.categoryPutValidator,
+  categoriesController.update
+);
+
+categories.delete(
+  "/:id",
+  middleware.categoryPathValidator,
+  categoriesController.remove
+);
 
 export { categories, category };
