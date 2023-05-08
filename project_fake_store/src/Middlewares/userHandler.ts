@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import bcript from "bcrypt";
 import jwt from "jsonwebtoken";
+import { makeError } from "./errorHandler";
+import repositoriesUsers from "../repositories/repositoriesUsers";
 
 const doCripto = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -16,11 +18,26 @@ const doCripto = async (req: Request, res: Response, next: NextFunction) => {
 
 const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userToken = req.headers.authorization?.split(" ")[1]!;
-    //se nao existe token make erro -> Token de autenticação obrigatorio
-    const verifyToken = jwt.verify(userToken, process.env.SECRET_TOKEN!);
-    //chamar o repositories para verificar se o id presente no token existe de fato no banco de dados
-    // se nao existir da o erro -> usuario não existe
+    const token: any = req.headers.authorization;
+    if (!token) {
+      throw makeError({
+        message: "Necessário fazer login para realizar essa ação",
+        status: 400,
+      });
+    }
+    const userToken = token?.split(" ")[1]!;
+    const verifyToken: any = jwt.verify(userToken, process.env.SECRET_TOKEN!);
+
+    const userFromDataBase = await repositoriesUsers.selectId(
+      verifyToken.userId
+    );
+
+    if (userFromDataBase.length === 0) {
+      throw makeError({
+        message: "Úsuario não existe",
+        status: 400,
+      });
+    }
 
     next();
   } catch (error) {

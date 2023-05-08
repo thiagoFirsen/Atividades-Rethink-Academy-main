@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import serviceCategories from "../service/serviceCategories";
-import { Category, Name, Products } from "../types";
+import { Category, Name, Products, ProductFromDB } from "../types";
 
 const index = async (
   req: Request,
@@ -22,8 +22,8 @@ const show = async (
 ): Promise<void> => {
   try {
     const id: number = parseInt(req.params.id);
-    const category: Category[] = await serviceCategories.getCategory(id);
-    res.status(200).send(category[0]);
+    const category: Category = await serviceCategories.getCategory(id);
+    res.status(200).send(category);
   } catch (error: any) {
     next(error);
   }
@@ -36,10 +36,8 @@ const insert = async (
 ): Promise<void> => {
   try {
     const { name }: Name = req.body;
-    const newCategory: Category[] = await serviceCategories.createCategory(
-      name
-    );
-    res.status(201).send({ id: newCategory[0], name });
+    const newCategory: Category = await serviceCategories.createCategory(name);
+    res.status(201).send(newCategory);
   } catch (error: any) {
     next(error);
   }
@@ -53,15 +51,12 @@ const update = async (
   try {
     const { name }: Name = req.body;
     const id: number = parseInt(req.params.id);
-    const updateCategory: number = await serviceCategories.updateCategory(
+    const updateCategory: Category = await serviceCategories.updateCategory(
       id,
       name
     );
 
-    res.status(200).json({
-      id,
-      name,
-    });
+    res.status(200).json(updateCategory);
   } catch (error: any) {
     next(error);
   }
@@ -86,21 +81,10 @@ const showProductsByCategory = async (
 ): Promise<void> => {
   try {
     const category: string = req.params.category;
-    const productsByCategory: Products[] =
+    const productsByCategory: ProductFromDB[] =
       await serviceCategories.getProductsByCategory(category);
-    const formatedProducts = productsByCategory.map((product: any) => ({
-      id: product.id,
-      title: product.title,
-      price: product.price,
-      description: product.description,
-      category: product.category,
-      image: product.image,
-      rating: {
-        rate: product.rate,
-        count: product.count,
-      },
-    }));
-    res.status(200).send(formatedProducts);
+
+    res.status(200).send(productsByCategory);
   } catch (error: any) {
     next(error);
   }

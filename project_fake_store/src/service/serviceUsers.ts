@@ -17,16 +17,20 @@ const getPassword = async (user: any) => {
   return getPassword[0].password;
 };
 
-const doLogin = async (
-  user: string,
-  password: string,
-  passwordFromDataBase: string
-) => {
-  const verifyPassword = bcript.compare(password, passwordFromDataBase);
+const doLogin = async (user: string, password: string) => {
+  const userId = await repositoriesLongin.findUser(user);
+  if (userId.length === 0) {
+    throw makeError({ message: "Usuario não encontrado", status: 400 });
+  }
+
+  const passwordFromDataBase = await getPassword(user);
+
+  const verifyPassword = await bcript.compare(password, passwordFromDataBase);
+
   if (!verifyPassword) {
     throw makeError({ message: "Senha inválida", status: 400 });
   }
-  const userId = await repositoriesLongin.findUser(user);
+
   const token = jwt.sign(
     {
       userId: userId[0].id,

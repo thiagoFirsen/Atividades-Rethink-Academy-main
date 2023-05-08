@@ -21,13 +21,7 @@ const verifyPassword = async (
 ) => {
   try {
     const { user, password } = req.body;
-    const passwordFromDataBase = await serviceUsers.getPassword(user);
-    const loginToken = await serviceUsers.doLogin(
-      user,
-      password,
-      passwordFromDataBase
-    );
-
+    const loginToken = await serviceUsers.doLogin(user, password);
     res.status(200).json(loginToken);
   } catch (error) {
     next(error);

@@ -38,21 +38,27 @@ const getProduct = async (id: number): Promise<ProductFromDB> => {
   return formatedProducts[0];
 };
 
-const postProduct = async (product: ProductFromDB): Promise<Products[]> => {
+const postProduct = async (product: ProductFromDB): Promise<ProductFromDB> => {
   const { category, rating, ...data }: ProductFromDB = product;
 
   const categoryId: any = await repositoriesProducts.selectProductCategory(
     category
   );
-  if (!categoryId[0].id)
+  if (!categoryId[0])
     throw makeError({ message: "Category not found", status: 400 });
+
   const formatedProduct: Products = {
     ...data,
     category_id: categoryId[0].id,
     rate: rating.rate,
     count: rating.count,
   };
-  return repositoriesProducts.insertProduct(formatedProduct);
+  const insertProduct: number[] = await repositoriesProducts.insertProduct(
+    formatedProduct
+  );
+  const productPosted = { id: insertProduct[0], ...product };
+
+  return productPosted;
 };
 
 const updateProduct = async (id: any, product: any): Promise<number> => {
@@ -60,15 +66,19 @@ const updateProduct = async (id: any, product: any): Promise<number> => {
   const selectedCategory = await repositoriesProducts.selectProductCategory(
     category
   );
-  const categoryId = selectedCategory[0].id;
-  if (!categoryId)
+  if (selectedCategory.length === 0) {
     throw makeError({ message: "Category not found", status: 400 });
+  }
+
+  const categoryId = await selectedCategory[0].id;
+
   const updateProduct: Products = {
     ...data,
     category_id: categoryId,
     rate: rating.rate,
     count: rating.count,
   };
+
   const productId: number = await repositoriesProducts.updateProduct(
     id,
     updateProduct
@@ -89,8 +99,9 @@ const partiallyUpdateProduct = async (
 
   let categoryId: number | undefined;
   if (product.category) {
-    const category: Category[] =
-      await repositoriesProducts.selectProductCategory(product.category);
+    const category = await repositoriesProducts.selectProductCategory(
+      product.category
+    );
     if (category.length === 0) {
       throw makeError({ message: "Categoria não existe", status: 400 });
     }

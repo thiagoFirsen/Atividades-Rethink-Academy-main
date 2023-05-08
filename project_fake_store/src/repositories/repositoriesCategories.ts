@@ -11,7 +11,7 @@ const selectAllCategories = (): Promise<Array<Category>> =>
 const selectCategory = (id: number): Promise<Array<Category>> =>
   knexInstance("categories").select("*").where({ "categories.id": id });
 
-const insertCategory = (name: string): Promise<Array<Category>> =>
+const insertCategory = (name: string): Promise<Array<number>> =>
   knexInstance("categories").insert({
     name,
   });
@@ -22,7 +22,7 @@ const updateCategory = (id: number, name: string): Promise<number> =>
 const deleteCategory = (id: number): Promise<number> =>
   knexInstance("categories").delete().where({ id });
 
-const findCategory = (category: string): Promise<Array<Category>> =>
+const findCategory = (category: string): Promise<Array<number>> =>
   knexInstance("categories").select("id").where({ name: category });
 
 const selectProductsByCategory = (

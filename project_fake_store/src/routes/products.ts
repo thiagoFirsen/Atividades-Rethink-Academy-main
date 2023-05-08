@@ -2,7 +2,7 @@ import { Router } from "express";
 import productsController from "../controllers/productsController";
 import { categories, category } from "./categories";
 import middleware from "../Middlewares/productDataValidator";
-import middlewareToken from "../Middlewares/userHandler";
+import middlwareAuth from "../Middlewares/userHandler";
 
 const router: Router = Router();
 
@@ -10,14 +10,20 @@ router.use("/categories", categories);
 
 router.use("/category", category);
 
-router.get("/", middlewareToken.verifyToken, productsController.index);
+router.get("/", productsController.index);
 
 router.get("/:id", middleware.productPathValidator, productsController.show);
 
-router.post("/", middleware.productDataValidator, productsController.insert);
+router.post(
+  "/",
+  middlwareAuth.verifyToken,
+  middleware.productDataValidator,
+  productsController.insert
+);
 
 router.put(
   "/:id",
+  middlwareAuth.verifyToken,
   middleware.productPathValidator,
   middleware.productDataValidator,
   productsController.update
@@ -25,6 +31,7 @@ router.put(
 
 router.patch(
   "/:id",
+  middlwareAuth.verifyToken,
   middleware.productPathValidator,
   middleware.partialProductValidator,
   productsController.partiallyUpdate
@@ -32,6 +39,7 @@ router.patch(
 
 router.delete(
   "/:id",
+  middlwareAuth.verifyToken,
   middleware.productPathValidator,
   productsController.remove
 );

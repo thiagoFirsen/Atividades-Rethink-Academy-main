@@ -15,4 +15,6 @@ const findUser = (user: string) =>
 const selectPassword = (user: any) =>
   knexInstance("users").select("password").where({ user });
 
-export default { insertUser, findUser, selectPassword };
+const selectId = (id: any) => knexInstance("users").select("*").where({ id });
+
+export default { insertUser, findUser, selectPassword, selectId };

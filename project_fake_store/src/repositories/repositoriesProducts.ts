@@ -34,10 +34,10 @@ const selectProduct = (id: number): Promise<Array<Products>> =>
     .join("categories", "categories.id", "=", "products.category_id")
     .where({ "products.id": id });
 
-const selectProductCategory = (category: any): Promise<Array<Category>> =>
+const selectProductCategory = (category: any): Promise<Array<any>> =>
   knexInstance("categories").select("id").where({ name: category });
 
-const insertProduct = (product: any): Promise<Array<Products>> =>
+const insertProduct = (product: any): Promise<Array<number>> =>
   knexInstance("products").insert(product);
 
 const updateProduct = (id: any, updateProduct: any): Promise<number> =>

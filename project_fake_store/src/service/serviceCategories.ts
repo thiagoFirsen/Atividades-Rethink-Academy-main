@@ -1,5 +1,6 @@
 import repositoriesCategories from "../repositories/repositoriesCategories";
 import { Category } from "../types";
+import { makeError } from "../Middlewares/errorHandler";
 
 const getAllCategories = async () => {
   const categories = await repositoriesCategories.selectAllCategories();
@@ -9,34 +10,51 @@ const getAllCategories = async () => {
 
 const getCategory = async (id: number) => {
   const category = await repositoriesCategories.selectCategory(id);
-  if (!category.length) throw new Error("Categorie not found");
-  return category;
+  if (!category.length)
+    throw makeError({ message: "Category not found", status: 400 });
+  return category[0];
 };
 
-const createCategory = async (name: string) => {
-  const newCategory = await repositoriesCategories.insertCategory(name);
-  return newCategory;
+const createCategory = async (name: string): Promise<Category> => {
+  const newCategory: number[] = await repositoriesCategories.insertCategory(
+    name
+  );
+  return { id: newCategory[0], name };
 };
-const updateCategory = async (id: number, name: string) => {
+
+const updateCategory = async (id: number, name: string): Promise<Category> => {
   const updateCategory = await repositoriesCategories.updateCategory(id, name);
-  if (!updateCategory) throw new Error("Category not found");
-  return updateCategory;
+  if (!updateCategory)
+    throw makeError({ message: "Category not found", status: 400 });
+  return { id, name };
 };
 
 const deleteCategory = async (id: number) => {
   const deleteCategory = await repositoriesCategories.deleteCategory(id);
-  if (!deleteCategory) throw new Error("Category not found");
+  if (!deleteCategory)
+    throw makeError({ message: "Category not found", status: 400 });
   return deleteCategory;
 };
 
 const getProductsByCategory = async (category: string) => {
-  const findCategory: any = repositoriesCategories.findCategory(category);
-  if (!findCategory) {
-    throw new Error(`Category not found!`);
-  }
+  const findCategoryId: any = repositoriesCategories.findCategory(category);
+  if (findCategoryId.length === 0)
+    throw makeError({ message: "Category not found", status: 400 });
   const productsByCategory =
-    await repositoriesCategories.selectProductsByCategory(findCategory);
-  return productsByCategory;
+    await repositoriesCategories.selectProductsByCategory(findCategoryId);
+  const formatedProducts = productsByCategory.map((product: any) => ({
+    id: product.id,
+    title: product.title,
+    price: product.price,
+    description: product.description,
+    category: product.category,
+    image: product.image,
+    rating: {
+      rate: product.rate,
+      count: product.count,
+    },
+  }));
+  return formatedProducts;
 };
 
 export default {

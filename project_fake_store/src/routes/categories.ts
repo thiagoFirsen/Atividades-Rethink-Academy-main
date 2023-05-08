@@ -1,6 +1,7 @@
 import { Router } from "express";
 import categoriesController from "../controllers/categoriesController";
 import middleware from "../Middlewares/categoriesDataValidator";
+import middlwareAuth from "../Middlewares/userHandler";
 
 const categories: Router = Router();
 const category: Router = Router();
@@ -21,12 +22,14 @@ categories.get(
 
 categories.post(
   "/",
+  middlwareAuth.verifyToken,
   middleware.categoryDataValidator,
   categoriesController.insert
 );
 
 categories.put(
   "/:id",
+  middlwareAuth.verifyToken,
   middleware.categoryPathValidator,
   middleware.categoryDataValidator,
   categoriesController.update
@@ -34,6 +37,7 @@ categories.put(
 
 categories.delete(
   "/:id",
+  middlwareAuth.verifyToken,
   middleware.categoryPathValidator,
   categoriesController.remove
 );

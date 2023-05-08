@@ -51,10 +51,8 @@ const insert = async (
       image,
       rating,
     };
-    const insertProduct: Products[] = await serviceProducts.postProduct(
-      product
-    );
-    res.send({ id: insertProduct[0], ...product });
+    const insertProduct = await serviceProducts.postProduct(product);
+    res.send(insertProduct);
   } catch (error: any) {
     next(error);
   }
@@ -85,12 +83,9 @@ const update = async (
       image,
       rating,
     };
-    const updateProduct: number = await serviceProducts.updateProduct(
-      id,
-      product
-    );
+    await serviceProducts.updateProduct(id, product);
 
-    res.status(200).send(product);
+    res.status(200).send({ id: id, ...product });
   } catch (error: any) {
     next(error);
   }
