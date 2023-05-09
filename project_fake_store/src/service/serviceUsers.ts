@@ -26,7 +26,10 @@ const doLogin = async (user: string, password: string) => {
   const passwordFromDataBase = await repositoriesLongin.selectPassword(user);
   const passwordFromDataBaseFormated = await passwordFromDataBase[0].password;
 
-  const verifyPassword = bcrypt.compare(password, passwordFromDataBaseFormated);
+  const verifyPassword = await bcrypt.compare(
+    password,
+    passwordFromDataBaseFormated
+  );
   if (!verifyPassword) {
     throw makeError({ message: "Senha inválida", status: 400 });
   }
