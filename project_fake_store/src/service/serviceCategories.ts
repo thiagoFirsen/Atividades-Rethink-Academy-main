@@ -37,7 +37,9 @@ const deleteCategory = async (id: number) => {
 };
 
 const getProductsByCategory = async (category: string) => {
-  const findCategoryId: any = repositoriesCategories.findCategory(category);
+  const findCategoryId: any = await repositoriesCategories.findCategory(
+    category
+  );
   if (findCategoryId.length === 0)
     throw makeError({ message: "Category not found", status: 400 });
   const productsByCategory =

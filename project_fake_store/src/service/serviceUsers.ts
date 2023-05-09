@@ -1,6 +1,6 @@
 import { makeError } from "../Middlewares/errorHandler";
 import repositoriesLongin from "../repositories/repositoriesUsers";
-import bcript from "bcrypt";
+import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 const createUser = async (user: string, password: string) => {
@@ -23,17 +23,17 @@ const doLogin = async (user: string, password: string) => {
     throw makeError({ message: "Usuario não encontrado", status: 400 });
   }
 
-  const passwordFromDataBase = await getPassword(user);
+  const passwordFromDataBase = await repositoriesLongin.selectPassword(user);
+  const passwordFromDataBaseFormated = await passwordFromDataBase[0].password;
 
-  const verifyPassword = await bcript.compare(password, passwordFromDataBase);
-
+  const verifyPassword = bcrypt.compare(password, passwordFromDataBaseFormated);
   if (!verifyPassword) {
     throw makeError({ message: "Senha inválida", status: 400 });
   }
 
   const token = jwt.sign(
     {
-      userId: userId[0].id,
+      userId: await userId[0].id,
     },
     process.env.SECRET_TOKEN!,
     { expiresIn: "7 days" }

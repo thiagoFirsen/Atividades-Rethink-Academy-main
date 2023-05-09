@@ -93,7 +93,7 @@ describe("Categories Tests", () => {
         .mockResolvedValueOnce([]);
       jest
         .spyOn(repositoriesCategories, "selectProductsByCategory")
-        .mockResolvedValueOnce([paramsFromDB]);
+        .mockResolvedValueOnce([]);
 
       await serviceCategories.getProductsByCategory("electronics");
     } catch (error: any) {
