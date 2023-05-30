@@ -12,6 +12,8 @@ router.use("/category", category);
 
 router.get("/", productsController.index);
 
+router.get("/bestSelling", productsController.indexTop3);
+
 router.get("/:id", middleware.productPathValidator, productsController.show);
 
 router.post(

@@ -19,6 +19,24 @@ const getAllProducts = async (): Promise<ProductFromDB[]> => {
   return formatedProducts;
 };
 
+const getTop3Products = async (): Promise<ProductFromDB[]> => {
+  const products: Products[] = await repositoriesProducts.selectAllProducts();
+  const formatedProducts: ProductFromDB[] = products.map((product) => ({
+    id: product.id,
+    title: product.title,
+    price: product.price,
+    description: product.description,
+    category: product.category,
+    image: product.image,
+    rating: {
+      rate: product.rate,
+      count: product.count,
+    },
+  }));
+  formatedProducts.sort((a, b) => b.rating.rate - a.rating.rate);
+  return formatedProducts.slice(0, 3);
+};
+
 const getProduct = async (id: number): Promise<ProductFromDB> => {
   const product: Products[] = await repositoriesProducts.selectProduct(id);
   const formatedProducts: ProductFromDB[] = product.map((product) => ({
@@ -137,6 +155,7 @@ const deleteProduct = async (id: any): Promise<number> => {
 
 export default {
   getAllProducts,
+  getTop3Products,
   getProduct,
   postProduct,
   updateProduct,

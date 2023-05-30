@@ -1,0 +1,279 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+}
+header {
+  display: flex;
+  height: 13.8vh;
+  width: 100vw;
+  background-color: #343434;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+header a {
+  width: 75px;
+  height: 28px;
+  font-family: "Roboto";
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 28px;
+  color: #ffffff;
+  text-decoration: none;
+  position: absolute;
+  left: 0;
+  margin-left: 71px;
+}
+
+header img {
+  width: 142px;
+  height: 33px;
+}
+
+.bodyHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 53px 71px 0px 71px;
+}
+
+.bodyHeader h1 {
+  width: 206px;
+  height: 43px;
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 120%;
+  color: #242d35;
+}
+
+.bodyHeader button {
+  width: 108px;
+  height: 40px;
+  background: #ffffff;
+  border: 1px solid #eaecee;
+  border-radius: 32px;
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 100%;
+  color: #0c1116;
+}
+
+.bodyHeader button img {
+  width: 10.67px;
+  height: 10.67px;
+}
+
+.container {
+  width: auto;
+  height: 60vh;
+  display: flex;
+}
+
+.mainContainer {
+  width: 60%;
+  height: 60vh;
+  margin: 23px 20px 24px 71px;
+}
+
+.overview {
+  display: flex;
+  align-items: center;
+}
+
+.overview h2 {
+  font-family: "Roboto";
+  font-style: italic;
+  font-weight: 100;
+  font-size: 24px;
+  line-height: 150%;
+  color: #242d35;
+}
+
+.list {
+  display: flex;
+  list-style: none;
+  align-items: center;
+}
+
+.list li {
+  display: flex;
+  align-items: center;
+}
+
+.box {
+  box-sizing: content-box;
+  border: 1px solid;
+  border-radius: 12px;
+  color: #ffffff;
+  padding: 5px 10px 7px 10px;
+  margin: 9px;
+  height: 12px;
+}
+
+.yellow {
+  background-color: #f1e05a;
+}
+
+.orange {
+  background-color: #e34c26;
+}
+
+.purple {
+  background-color: #563d7c;
+}
+
+.blue {
+  background-color: #2b7489;
+}
+
+.black {
+  background-color: #292929;
+}
+
+.text {
+  margin-top: 24px;
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #373f47;
+}
+
+.containerResume {
+  background: #f3f3f3;
+  margin-top: 35px;
+  border-radius: 15px;
+}
+
+.containerResume ul {
+  display: flex;
+  list-style: none;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.containerResume li {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 150%;
+}
+
+.boxResume {
+  width: 111.32px;
+  height: 68px;
+  background: #ffffff;
+  margin: 12px 25px 11px 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.asideContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 32px 28px 36px;
+  border: 1px solid #eaecee;
+  width: 249px;
+  height: 332px;
+  margin-left: 191px;
+  margin-top: 65px;
+  border-radius: 12px;
+}
+
+.mainAside {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.mainAside h3 {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 150%;
+  color: #242d35;
+  margin-bottom: 4px;
+  margin-top: 14px;
+}
+
+.mainAside h4 {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 150%;
+  color: #4f5b67;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  width: 180px;
+  height: 38px;
+}
+
+.boxStatus {
+  text-align: center;
+}
+
+hr {
+  width: 34px;
+  height: 0px;
+  border: 1px solid #f1f1f1;
+  transform: rotate(90deg);
+}
+
+.boxStatus h5 {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 150%;
+  color: #a8b0b9;
+  text-align: center;
+}
+
+.boxStatus p {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 150%;
+  color: #373f47;
+  text-align: center;
+}
+
+.asideContainer button {
+  width: 112px;
+  height: 40px;
+  border-radius: 42px;
+  margin-top: 36px;
+  border: 1px solid #eaecee;
+  background: #ffffff;
+}
+
+footer {
+  width: 100%;
+  height: 16.25%;
+  background-color: #343434;
+}

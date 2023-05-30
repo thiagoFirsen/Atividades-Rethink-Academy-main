@@ -15,6 +15,16 @@ const index = async (
   }
 };
 
+const indexTop3 = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const top3Producs: ProductFromDB[] =
+      await serviceProducts.getTop3Products();
+    res.status(200).send(top3Producs);
+  } catch (error: any) {
+    next(error);
+  }
+};
+
 const show = async (
   req: Request,
   res: Response,
@@ -120,4 +130,12 @@ const remove = async (
   }
 };
 
-export default { index, show, insert, update, remove, partiallyUpdate };
+export default {
+  index,
+  indexTop3,
+  show,
+  insert,
+  update,
+  remove,
+  partiallyUpdate,
+};

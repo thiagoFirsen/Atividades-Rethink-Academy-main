@@ -1,0 +1,14 @@
+.container {
+  display: flex;
+  border: 1px solid red;
+}
+
+.item {
+  flex-basis: 100%;
+  color: red;
+  border: 1px solid black;
+}
+
+.container div:nth-child(2) {
+  order: -1;
+}
